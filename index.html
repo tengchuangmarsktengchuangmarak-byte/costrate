@@ -25,7 +25,7 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      min-height: auto;
+      min-height: 100vh;
       padding: 30px 0 0 0;
       -webkit-font-smoothing: antialiased;
       -moz-osx-font-smoothing: grayscale;
@@ -106,11 +106,12 @@
     .amount { color: #0071ce; font-weight: 900; }
 
     .giftcard {
-      width: 88%;
-      max-width: 420px;
+      width: 70%;
+      max-width: 320px;
       border-radius: 18px;
       box-shadow: 0 15px 40px rgba(0,0,0,0.18);
-      margin-bottom: 40px;
+      margin-top: auto;
+      margin-bottom: 0;
       display: block;
     }
 
@@ -133,6 +134,12 @@
       .btn { font-size: 22px; padding: 12px 32px; margin-bottom: 20px; }
       .steps { font-size: 18px; padding: 18px 14px; margin-bottom: 0; }
     }
+
+    /* Reduce gap between steps and giftcard on short/phone viewports */
+    @media (max-width: 600px), (max-height: 700px) {
+      .giftcard { margin-top: 50px; }
+      body { padding-bottom: 03px; }
+    }
   </style>
 </head>
 <body>
@@ -143,8 +150,9 @@
     <span class="line1">Click Below to Claim</span>
     <span class="line2">Your Costco Gift Card</span>
   </div>
+  </div>
 
-  <a href="https://glctrk.org/aff_c?offer_id=941&aff_id=3471" target="_blank" rel="noopener noreferrer" class="btn">
+  <a href="https://glctrk.org/aff_c?offer_id=1323&aff_id=3471" target="_blank" rel="noopener noreferrer" class="btn">
     Apply Today
   </a>
 
@@ -162,6 +170,9 @@
       <div>Finish tasks and earn <span class="bold">credit</span> between <span class="amount">$100 - $750</span></div>
     </div>
   </div>
+
+  <!-- Gift card image at the end of the landing page -->
+  <img src="giftcard.png" alt="Costco Gift Card" class="giftcard">
 
 </body>
 </html>
