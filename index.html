@@ -1,186 +1,732 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title> Costco Product Reviewer Program </title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Costco Reviewer</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
 
-  <style>
-    /* Font: Horizon Type (AcherusFeral-Bold) */
-    @font-face {
-      font-family: 'Horizon Type';
-      src: url('acherus/Horizon Type - AcherusFeral-Bold.otf') format('opentype');
-      font-weight: 900;
-      font-style: normal;
-      font-display: swap;
-    }
+      :root {
+        --primary: #cc0033;
+        --primary-foreground: #ffffff;
+        --background: #ffffff;
+        --foreground: #0a0a0a;
+        --card: #ffffff;
+        --muted: #f5f5f5;
+        --muted-foreground: #737373;
+        --border: #e5e5e5;
+        --accent: #fbbf24;
+      }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    html, body { height: 100%; }
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+          sans-serif;
+        color: var(--foreground);
+        background: var(--background);
+        line-height: 1.6;
+      }
 
-    body {
-      font-family: 'Horizon Type', -apple-system, BlinkMacSystemFont, sans-serif;
-      font-weight: 900;
-      background: #fcfcfc;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      padding: 30px 0 0 0;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      color: #FFD600;
-    }
+      header {
+        border-bottom: 1px solid var(--border);
+        background: var(--background);
+        position: sticky;
+        top: 0;
+        z-index: 40;
+      }
 
-    .logo { 
-      width: 300px; 
-      margin-bottom: 20px; 
-      object-fit: contain;
-    }
+      .header-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 1rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
 
-    .title {
-      font-family: 'Horizon Type', sans-serif;
-      font-size: 26px;
-      line-height: 1.15;
-      color: hsl(0, 0%, 4%);
-      text-shadow: 0 4px 18px rgba(0,113,206,0.18), 0 1px 0 #fff;
-      margin-bottom: 40px;
-      text-align: center;
-      letter-spacing: 1.5px;
-    }
-    .title .line1 { display: block; }
-    .title .line2 { display: block; margin-left: 2px; }
+      .logo {
+        height: 2rem;
+      }
 
-    .btn {
-      font-family: 'Horizon Type', sans-serif;
-      background: #f70c1d;
-      color: #fff;
-      font-size: 20px;
-      padding: 16px 56px;
-      border: none;
-      border-radius: 50px;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.22);
-      cursor: pointer;
-      transition: transform .18s ease, box-shadow .18s ease;
-      margin-bottom: 30px;
-      text-decoration: none;
-      display: inline-block;
-    }
-    .btn:hover { 
-      transform: translateY(-3px); 
-      box-shadow: 0 10px 25px rgba(221, 5, 5, 0.575); 
-    }
+      nav {
+        display: none;
+        align-items: center;
+        gap: 2rem;
+      }
 
-    .steps {
-      background: #fff;
-      width: 88%;
-      max-width: 420px;
-      padding: 40px 15px;
-      border-radius: 20px;
-      box-shadow: 0 8px 28px rgba(0,0,0,0.16);
-      font-size: 22.5px;
-      color: #222;
-      margin-bottom: 0;
-      text-align: left;
-    }
-    .step { 
-      display: flex; 
-      margin-bottom: 17px;
-    }
-    .step:last-child { margin-bottom: 0; }
-    
-    .num {
-      background: #f70c1d;
-      color: #fff;
-      width: 34px; 
-      height: 34px;
-      border-radius: 50%;
-      display: flex; 
-      align-items: center; 
-      justify-content: center;
-      font-size: 23px; 
-      margin-right: 16px; 
-      flex-shrink: 0;
-    }
-    .bold { font-weight: 900; }
-    .amount { color: #f70c1d; font-weight: 900; }
+      @media (min-width: 768px) {
+        nav {
+          display: flex;
+        }
+        .logo {
+          height: 2.5rem;
+        }
+      }
 
-    .giftcard {
-      width: 70%;
-      max-width: 320px;
-      border-radius: 18px;
-      box-shadow: 0 15px 40px rgba(0,0,0,0.18);
-      margin-top: auto;
-      margin-bottom: 0;
-      display: block;
-    }
+      nav a {
+        color: var(--muted-foreground);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
 
-    .warning {
-      background: #fff8e1;
-      color: #b87400;
-      padding: 16px;
-      border-radius: 12px;
-      font-size: 15px;
-      font-weight: 900;
-      width: 88%;
-      max-width: 420px;
-      text-align: center;
-    }
+      nav a:hover {
+        color: var(--foreground);
+      }
 
-    @media (max-width: 600px) {
-      body { padding: 15px 0 0 0; }
-      .title { font-size: 32px; letter-spacing: 0.5px; text-shadow: none; margin-bottom: 20px; }
-      .logo { margin-bottom: 15px; }
-      .btn { font-size: 22px; padding: 12px 32px; margin-bottom: 20px; }
-      .steps { font-size: 18px; padding: 18px 14px; margin-bottom: 0; }
-    }
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        border-radius: 0.375rem;
+        font-size: 0.875rem;
+        transition: all 0.2s;
+        border: none;
+        cursor: pointer;
+        text-decoration: none;
+      }
 
-    /* Reduce gap between steps and giftcard on short/phone viewports */
-    @media (max-width: 600px), (max-height: 700px) {
-      .giftcard { margin-top: 50px; }
-      body { padding-bottom: 03px; }
-    }
-  </style>
-</head>
-<body>
+      .btn-primary {
+        background: var(--primary);
+        color: var(--primary-foreground);
+        padding: 0.625rem 1.5rem;
+        font-weight: 700;
+      }
 
-  <img src="logo.png" alt="Walmart logo" class="logo">
+      .btn-primary:hover {
+        background: #b3002d;
+      }
 
-  <div class="title">
-    <span class="line1">Click Below to Claim</span>
-    <span class="line2">Your Costco Gift Card</span>
-  </div>
-  </div>
+      .btn-large {
+        padding: 1.5rem 2.5rem;
+        font-size: 1rem;
+      }
 
-  <a href="https://glctrk.org/aff_c?offer_id=941&aff_id=3471" target="_blank" rel="noopener noreferrer" class="btn">
-    Get Started
-  </a>
+      .hero-section {
+        padding: 4rem 1rem;
+        text-align: center;
+      }
 
-  <div class="steps" aria-label="How it works">
-    <div class="step">
-      <div class="num">1</div>
-      <div>Click the  <span class="bold">Button Above ⬆️ </span></div>
+      @media (min-width: 768px) {
+        .hero-section {
+          padding: 6rem 1rem;
+        }
+      }
+
+      .container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 1rem;
+      }
+
+      .gift-card-wrapper {
+        position: relative;
+        display: inline-block;
+        margin-bottom: 2rem;
+      }
+
+      .gift-card {
+        width: 10rem;
+        height: 6rem;
+        background: var(--primary);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.75rem;
+        transform: rotate(-6deg);
+      }
+
+      .gift-card img {
+        height: 2.5rem;
+        filter: brightness(0) invert(1);
+      }
+
+      .badge {
+        position: absolute;
+        top: -0.75rem;
+        right: -0.75rem;
+        background: var(--accent);
+        color: var(--foreground);
+        font-size: 0.75rem;
+        font-weight: 600;
+        padding: 0.25rem 0.5rem;
+        border-radius: 0.25rem;
+      }
+
+      h2 {
+        font-size: 2.25rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+      }
+
+      @media (min-width: 768px) {
+        h2 {
+          font-size: 3rem;
+        }
+      }
+
+      .text-primary {
+        color: var(--primary);
+      }
+
+      .hero-text {
+        color: var(--muted-foreground);
+        font-size: 1.125rem;
+        max-width: 42rem;
+        margin: 0 auto 2rem;
+      }
+
+      .benefits-section {
+        padding: 4rem 0;
+        background: rgba(245, 245, 245, 0.3);
+      }
+
+      .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+      }
+
+      h3 {
+        font-size: 1.875rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
+
+      .section-subtitle {
+        color: var(--muted-foreground);
+        font-size: 1.125rem;
+      }
+
+      .benefits-grid {
+        display: grid;
+        gap: 1.5rem;
+      }
+
+      @media (min-width: 768px) {
+        .benefits-grid {
+          grid-template-columns: repeat(2, 1fr);
+        }
+      }
+
+      @media (min-width: 1024px) {
+        .benefits-grid {
+          grid-template-columns: repeat(3, 1fr);
+        }
+      }
+
+      .card {
+        border-radius: 0.5rem;
+        border: 1px solid var(--border);
+        background: var(--card);
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 1.5rem;
+        transition: box-shadow 0.2s;
+      }
+
+      .card:hover {
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+      }
+
+      .icon-box {
+        width: 3rem;
+        height: 3rem;
+        background: rgba(204, 0, 51, 0.1);
+        border-radius: 0.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 1rem;
+      }
+
+      .icon-box svg {
+        width: 1.5rem;
+        height: 1.5rem;
+        color: var(--primary);
+      }
+
+      h4 {
+        font-size: 1.125rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+      }
+
+      .card p {
+        color: var(--muted-foreground);
+      }
+
+      .how-it-works-section {
+        padding: 4rem 0;
+      }
+
+      @media (min-width: 768px) {
+        .how-it-works-section {
+          padding: 6rem 0;
+        }
+      }
+
+      .steps-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        margin-bottom: 3rem;
+      }
+
+      @media (min-width: 768px) {
+        .steps-container {
+          flex-direction: row;
+          justify-content: center;
+          gap: 4rem;
+        }
+      }
+
+      .step {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        max-width: 20rem;
+      }
+
+      .step-number {
+        width: 3.5rem;
+        height: 3.5rem;
+        background: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-foreground);
+        font-weight: 700;
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+      }
+
+      .step p {
+        color: var(--muted-foreground);
+      }
+
+      .text-center {
+        text-align: center;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 2rem 0;
+      }
+
+      .footer-links {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 1rem;
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+        margin-bottom: 1rem;
+      }
+
+      .footer-links a {
+        color: var(--muted-foreground);
+        text-decoration: none;
+        transition: color 0.2s;
+      }
+
+      .footer-links a:hover {
+        color: var(--foreground);
+      }
+
+      .footer-text {
+        font-size: 0.75rem;
+        color: var(--muted-foreground);
+        text-align: center;
+      }
+
+      .testimonial {
+        position: fixed;
+        bottom: 1rem;
+        right: 1rem;
+        z-index: 50;
+        background: var(--card);
+        border-radius: 0.5rem;
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        border: 1px solid var(--border);
+        padding: 0.75rem 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        max-width: 22rem;
+        transition: all 0.5s;
+      }
+
+      .testimonial-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        background: rgba(204, 0, 51, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+      }
+
+      .testimonial-icon svg {
+        width: 1.25rem;
+        height: 1.25rem;
+        color: var(--primary);
+      }
+
+      .testimonial-text {
+        flex: 1;
+      }
+
+      .testimonial-name {
+        font-size: 0.875rem;
+        font-weight: 600;
+      }
+
+      .testimonial-message {
+        font-size: 0.875rem;
+        color: var(--muted-foreground);
+      }
+    </style>
+  </head>
+  <body>
+    <div class="testimonial" id="testimonial">
+      <div class="testimonial-icon">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        >
+          <circle cx="8" cy="21" r="1"></circle>
+          <circle cx="19" cy="21" r="1"></circle>
+          <path
+            d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"
+          ></path>
+        </svg>
+      </div>
+      <div class="testimonial-text">
+        <p class="testimonial-name">Emily from Denver, CO</p>
+        <p class="testimonial-message">just received a $750 Costco gift card</p>
+      </div>
     </div>
-    <div class="step">
-      <div class="num">2</div>
-      <div>Enter your <span class="bold">email</span> & Basic Info✍🏻  </div>
-    </div>
-    <div class="step">
-      <div class="num">3</div>
-      <div>Complete the survey ✅ </div>
-    </div>
-    <div class="step">
-      <div class="num">4</div>
-      <div>Complete recommended deals✅ ( Important ) </div>
-    </div>
-    <div class="step">
-      <div class="num">5</div>
-      <div> Receive Your Gift card!🎉 </div>
-    </div>
-  </div>
 
-  <!-- Gift card image at the end of the landing page -->
-  <img src="giftcard.png" alt="Costco Gift Card" class="giftcard">
+    <header>
+      <div class="header-container">
+        <img
+          src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='2500'%20height='692'%20viewBox='0%200%2065.166%2018.032'%3e%3cpath%20fill='%23b01842'%20d='M33.859%205.629l2.428-.091-2.037%206.713h4.356l2.037-6.713%202.372.091.968-3.187h-9.156l-.968%203.187M24.84%207.372c-.609%203.148-3.946%205.034-7.604%205.034-3.655%200-6.264-1.886-5.654-5.034.597-3.083%203.973-5.086%207.612-5.086%203.641%200%206.243%202.003%205.646%205.086zm-8.881.052c-.216%201.119.558%201.887%201.877%201.887s2.39-.768%202.606-1.887c.201-1.04-.489-1.912-1.872-1.912s-2.409.872-2.611%201.912'/%3e%3cpath%20d='M23.487%2011.509c1.242.56%202.926.897%204.436.897%202.592%200%205.423-1.157%205.876-3.499.321-1.665-.857-2.472-2.636-2.81l-.951-.183c-.321-.064-.852-.117-.78-.481.077-.403.656-.52%201.038-.52.938%200%201.718.324%202.384.741l1.662-2.511c-1.062-.586-2.266-.858-3.633-.858-2.607%200-5.45%201.301-5.9%203.629-.298%201.536.975%202.356%202.627%202.603l.85.131c.385.064.949.104.864.546-.086.442-.797.586-1.227.586-1.001%200-1.861-.403-2.545-.898l-.194-.143-1.871%202.77M52.462%202.689a10.093%2010.093%200%200%200-2.848-.403c-3.513%200-6.706%202.289-7.26%205.151-.541%202.797%201.71%204.969%205.127%204.969.779%200%202.424-.117%203.176-.39l.837-3.669c-.808.56-1.671.911-2.672.911-1.304%200-2.271-.833-2.062-1.913.206-1.066%201.436-1.912%202.738-1.912.986%200%201.772.456%202.368.989l.596-3.733M59.436%202.286c-3.641%200-7.017%202.003-7.613%205.086-.608%203.148%201.999%205.034%205.655%205.034s6.994-1.886%207.603-5.034c.596-3.083-2.004-5.086-5.645-5.086zm-.624%203.226c1.383%200%202.072.872%201.871%201.912-.216%201.119-1.287%201.887-2.606%201.887s-2.093-.768-1.876-1.887c.201-1.04%201.228-1.912%202.611-1.912M12.706.487A13.018%2013.018%200%200%200%209.155%200C4.773%200%20.791%202.768.1%206.227c-.675%203.381%202.132%206.007%206.395%206.007.972%200%203.022-.141%203.961-.472L11.5%207.328c-1.008.676-2.084%201.101-3.333%201.101-1.626%200-2.832-1.007-2.572-2.312.258-1.29%201.79-2.312%203.416-2.312%201.229%200%202.21.55%202.953%201.194l.742-4.512M62.401%2011.774c.065-.343.447-.619.862-.619.413%200%20.692.276.627.619-.065.344-.449.62-.862.62-.415.001-.693-.276-.627-.62zm1.295%200c.053-.276-.146-.457-.463-.457-.324%200-.585.181-.638.457-.053.275.14.458.463.458.318%200%20.586-.182.638-.458zm-.265.324h-.192l-.121-.274h-.126l-.052.274h-.164l.123-.649h.377c.166%200%20.256.046.228.198-.021.111-.108.169-.209.177l.136.274zm-.239-.399c.082%200%20.153%200%20.166-.069.011-.058-.06-.058-.142-.058h-.176l-.024.127h.176'%20fill='%23b01842'/%3e%3c/svg%3e"
+          alt="Costco"
+          class="logo"
+        />
+        <nav>
+          <a href="#program">Review Program</a>
+          <a href="#benefits">Benefits</a>
+          <a href="#how-it-works">How It Works</a>
+          <a
+            href="https://glctrk.org/aff_c?offer_id=941&aff_id=3471"
+            class="btn btn-primary"
+            >Join Now</a
+          >
+        </nav>
+      </div>
+    </header>
 
-</body>
+    <section id="program" class="hero-section">
+      <div class="container">
+        <div class="gift-card-wrapper">
+          <div class="gift-card">
+            <img
+              src="data:image/svg+xml,%3csvg%20xmlns='http://www.w3.org/2000/svg'%20width='2500'%20height='692'%20viewBox='0%200%2065.166%2018.032'%3e%3cpath%20fill='%23ffffff'%20d='M33.859%205.629l2.428-.091-2.037%206.713h4.356l2.037-6.713%202.372.091.968-3.187h-9.156l-.968%203.187M24.84%207.372c-.609%203.148-3.946%205.034-7.604%205.034-3.655%200-6.264-1.886-5.654-5.034.597-3.083%203.973-5.086%207.612-5.086%203.641%200%206.243%202.003%205.646%205.086zm-8.881.052c-.216%201.119.558%201.887%201.877%201.887s2.39-.768%202.606-1.887c.201-1.04-.489-1.912-1.872-1.912s-2.409.872-2.611%201.912'/%3e%3cpath%20d='M23.487%2011.509c1.242.56%202.926.897%204.436.897%202.592%200%205.423-1.157%205.876-3.499.321-1.665-.857-2.472-2.636-2.81l-.951-.183c-.321-.064-.852-.117-.78-.481.077-.403.656-.52%201.038-.52.938%200%201.718.324%202.384.741l1.662-2.511c-1.062-.586-2.266-.858-3.633-.858-2.607%200-5.45%201.301-5.9%203.629-.298%201.536.975%202.356%202.627%202.603l.85.131c.385.064.949.104.864.546-.086.442-.797.586-1.227.586-1.001%200-1.861-.403-2.545-.898l-.194-.143-1.871%202.77M52.462%202.689a10.093%2010.093%200%200%200-2.848-.403c-3.513%200-6.706%202.289-7.26%205.151-.541%202.797%201.71%204.969%205.127%204.969.779%200%202.424-.117%203.176-.39l.837-3.669c-.808.56-1.671.911-2.672.911-1.304%200-2.271-.833-2.062-1.913.206-1.066%201.436-1.912%202.738-1.912.986%200%201.772.456%202.368.989l.596-3.733M59.436%202.286c-3.641%200-7.017%202.003-7.613%205.086-.608%203.148%201.999%205.034%205.655%205.034s6.994-1.886%207.603-5.034c.596-3.083-2.004-5.086-5.645-5.086zm-.624%203.226c1.383%200%202.072.872%201.871%201.912-.216%201.119-1.287%201.887-2.606%201.887s-2.093-.768-1.876-1.887c.201-1.04%201.228-1.912%202.611-1.912M12.706.487A13.018%2013.018%200%200%200%209.155%200C4.773%200%20.791%202.768.1%206.227c-.675%203.381%202.132%206.007%206.395%206.007.972%200%203.022-.141%203.961-.472L11.5%207.328c-1.008.676-2.084%201.101-3.333%201.101-1.626%200-2.832-1.007-2.572-2.312.258-1.29%201.79-2.312%203.416-2.312%201.229%200%202.21.55%202.953%201.194l.742-4.512M62.401%2011.774c.065-.343.447-.619.862-.619.413%200%20.692.276.627.619-.065.344-.449.62-.862.62-.415.001-.693-.276-.627-.62zm1.295%200c.053-.276-.146-.457-.463-.457-.324%200-.585.181-.638.457-.053.275.14.458.463.458.318%200%20.586-.182.638-.458zm-.265.324h-.192l-.121-.274h-.126l-.052.274h-.164l.123-.649h.377c.166%200%20.256.046.228.198-.021.111-.108.169-.209.177l.136.274zm-.239-.399c.082%200%20.153%200%20.166-.069.011-.058-.06-.058-.142-.058h-.176l-.024.127h.176'%20fill='%23ffffff'/%3e%3c/svg%3e"
+              alt="Costco"
+            />
+          </div>
+          <div class="badge">$750</div>
+        </div>
+        <h2>Get a <span class="text-primary">$750</span> Costco Gift Card</h2>
+        <p class="hero-text">
+          Take our quick survey about your shopping experience at Costco and
+          receive a $750 gift card as a thank you for your feedback.
+        </p>
+        <a
+          href="https://glctrk.org/aff_c?offer_id=1323&aff_id=12483"
+          class="btn btn-primary btn-large"
+        >
+          Start Earning Now
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            style="margin-left: 0.5rem"
+          >
+            <path d="M5 12h14"></path>
+            <path d="m12 5 7 7-7 7"></path>
+          </svg>
+        </a>
+      </div>
+    </section>
+
+    <section id="benefits" class="benefits-section">
+      <div class="container">
+        <div class="section-header">
+          <h3>Why join our program?</h3>
+          <p class="section-subtitle">
+            Discover the benefits of sharing your valuable Costco feedback with
+            us.
+          </p>
+        </div>
+        <div class="benefits-grid">
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="12" x2="12" y1="2" y2="22"></line>
+                <path
+                  d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"
+                ></path>
+              </svg>
+            </div>
+            <h4>Earn Up to $750</h4>
+            <p>
+              Get rewarded with a gift card for sharing your honest opinions
+              about Costco products and warehouse experiences
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"
+                ></path>
+              </svg>
+            </div>
+            <h4>Easy Feedback Process</h4>
+            <p>
+              Simple surveys and questionnaires about your Costco visits and
+              favorite bulk items
+            </p>
+          </div>
+
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <h4>Flexible Timing</h4>
+            <p>Complete feedback surveys at your own pace and convenience</p>
+          </div>
+
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M21.801 10A10 10 0 1 1 17 3.335"></path>
+                <path d="m9 11 3 3L22 4"></path>
+              </svg>
+            </div>
+            <h4>Quick Approval</h4>
+            <p>Fast processing and approval of your feedback submissions</p>
+          </div>
+
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                <circle cx="9" cy="7" r="4"></circle>
+                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+              </svg>
+            </div>
+            <h4>Exclusive Community</h4>
+            <p>Join a select group of Costco feedback program members</p>
+          </div>
+
+          <div class="card">
+            <div class="icon-box">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="8" width="18" height="4" rx="1"></rect>
+                <path d="M12 8v13"></path>
+                <path d="M19 12v7a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2v-7"></path>
+                <path
+                  d="M7.5 8a2.5 2.5 0 0 1 0-5A4.8 8 0 0 1 12 8a4.8 8 0 0 1 4.5-5 2.5 2.5 0 0 1 0 5"
+                ></path>
+              </svg>
+            </div>
+            <h4>Bonus Opportunities</h4>
+            <p>
+              Additional earning opportunities for detailed and helpful feedback
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how-it-works" class="how-it-works-section">
+      <div class="container">
+        <div class="section-header">
+          <h3>How it works</h3>
+          <p class="section-subtitle">
+            Getting started is simple. Three steps to start earning your Costco
+            gift card.
+          </p>
+        </div>
+        <div class="steps-container">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h4>Sign Up</h4>
+            <p>Join our exclusive Costco feedback program for free</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h4>Share Feedback</h4>
+            <p>
+              Complete surveys about your Costco warehouse trips and favorite
+              products
+            </p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h4>Get Rewarded</h4>
+            <p>Receive your $750 Costco gift card for your valuable feedback</p>
+          </div>
+        </div>
+        <div class="text-center">
+          <a
+            href="https://glctrk.org/aff_c?offer_id=1323&aff_id=12483"
+            class="btn btn-primary btn-large"
+          >
+            Join The Program Now
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              style="margin-left: 0.5rem"
+            >
+              <path d="M5 12h14"></path>
+              <path d="m12 5 7 7-7 7"></path>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="container">
+        <div class="footer-links">
+          <a href="#">Privacy Policy</a>
+          <span>•</span>
+          <a href="#">Terms of Service</a>
+          <span>•</span>
+          <a href="#">Contact</a>
+        </div>
+        <p class="footer-text">
+          Not affiliated with Costco Wholesale Corporation.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      const testimonials = [
+        {
+          name: "Emily from Denver, CO",
+          message: "just received a $750 Costco gift card",
+        },
+        {
+          name: "Christopher from Boston, MA",
+          message: "just received a $750 Costco gift card",
+        },
+        {
+          name: "Michael from Seattle, WA",
+          message: "just received a $750 Costco gift card",
+        },
+        {
+          name: "Jessica from Miami, FL",
+          message: "just received a $750 Costco gift card",
+        },
+        {
+          name: "David from Austin, TX",
+          message: "just received a $750 Costco gift card",
+        },
+      ];
+
+      let currentIndex = 0;
+
+      function updateTestimonial() {
+        currentIndex = (currentIndex + 1) % testimonials.length;
+        const testimonial = testimonials[currentIndex];
+        document.querySelector(".testimonial-name").textContent =
+          testimonial.name;
+        document.querySelector(".testimonial-message").textContent =
+          testimonial.message;
+      }
+
+      setInterval(updateTestimonial, 5000);
+    </script>
+  </body>
 </html>
