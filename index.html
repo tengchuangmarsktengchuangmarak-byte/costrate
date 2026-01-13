@@ -356,7 +356,7 @@
         border-radius: 999px; /* pill */
         box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
         border: 1px solid var(--border);
-        padding: 0.6rem 1rem;
+        padding: 0.45rem 0.9rem; /* reduced vertical padding for smaller height */
         display: flex;
         align-items: center;
         gap: 0.75rem;
@@ -406,11 +406,11 @@
       }
 
       .testimonial-avatar {
-        width: 44px;
-        height: 44px;
-        border-radius: 10px;
+        width: 48px;
+        height: 48px;
+        border-radius: 8px;
         overflow: hidden;
-        margin-right: 0.75rem;
+        margin-right: 0.6rem;
         flex-shrink: 0;
       }
 
@@ -455,16 +455,7 @@
         line-height: 1;
       }
 
-      .close-btn {
-        background: transparent;
-        border: none;
-        color: #9aa1a6;
-        font-size: 16px;
-        padding: 6px;
-        cursor: pointer;
-        border-radius: 8px;
-        -webkit-tap-highlight-color: transparent;
-      }
+      /* close button removed per request */
 
       /* Hidden state used by JS rotation */
       .testimonial.hidden {
@@ -482,7 +473,7 @@
           width: calc(100% - 1.2rem);
           max-width: none;
           border-radius: 12px; /* slightly less pill on mobile */
-          padding: 0.8rem 1rem;
+          padding: 0.6rem 0.9rem; /* compact but touch-friendly */
           min-width: 0;
         }
 
@@ -493,14 +484,14 @@
         .testimonial-name { font-size: 1rem; }
         .testimonial-message { font-size: 0.95rem; }
         .testimonial-time { font-size: 0.85rem; }
-        .close-btn { padding: 10px; }
+        /* close button removed */
       }
     </style>
   </head>
   <body>
     <div class="testimonial hidden" id="testimonial" role="status" aria-live="polite" aria-atomic="true">
       <div class="testimonial-avatar">
-        <img src="" alt="Profile" class="profile-pic" id="testimonial-avatar">
+        <img src="" alt="Profile" class="profile-pic" id="testimonial-avatar" width="128" height="128">
       </div>
       <div class="testimonial-text">
         <p class="testimonial-name">Emily from Denver, CO</p>
@@ -508,7 +499,7 @@
       </div>
       <div class="testimonial-meta">
         <span class="testimonial-time">Just now</span>
-        <button class="close-btn" id="testimonial-close" aria-label="Dismiss updates">✕</button>
+        <!-- close button removed -->
       </div>
     </div>
 
@@ -852,7 +843,6 @@
       const msgEl = el.querySelector('.testimonial-message');
       const avatarEl = document.getElementById('testimonial-avatar');
       const timeEl = el.querySelector('.testimonial-time');
-      const closeBtn = document.getElementById('testimonial-close');
 
       function setContent(t) {
         nameEl.textContent = t.name;
@@ -941,11 +931,7 @@
         setTimeout(() => startRotation(), 800);
       });
 
-      closeBtn.addEventListener('click', () => {
-        hide();
-        stopRotation();
-        el.setAttribute('aria-hidden', 'true');
-      });
+      // close button removed — widget cannot be dismissed manually
     </script>
   </body>
 </html>
