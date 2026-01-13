@@ -353,17 +353,17 @@
         right: 1rem;
         z-index: 50;
         background: var(--card);
-        border-radius: 999px; /* pill */
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+        border-radius: 12px; /* more rectangular */
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
         border: 1px solid var(--border);
-        padding: 0.45rem 0.9rem; /* reduced vertical padding for smaller height */
+        padding: 0.35rem 0.8rem; /* even slimmer */
         display: flex;
         align-items: center;
-        gap: 0.75rem;
-        max-width: 420px; /* not too big */
+        gap: 0.6rem;
+        max-width: 320px; /* smaller width */
         width: auto;
-        min-width: 220px;
-        transition: opacity 0.45s ease, transform 0.45s ease;
+        min-width: 160px; /* allow more compact size */
+        transition: opacity 0.35s ease, transform 0.35s ease;
         opacity: 1;
         transform: translateY(0);
         pointer-events: auto;
@@ -470,10 +470,10 @@
           left: 50%;
           right: auto;
           transform: translateX(-50%) translateY(0);
-          width: calc(100% - 1.2rem);
+          width: calc(100% - 1rem);
           max-width: none;
-          border-radius: 12px; /* slightly less pill on mobile */
-          padding: 0.6rem 0.9rem; /* compact but touch-friendly */
+          border-radius: 10px; /* slightly less pill on mobile */
+          padding: 0.5rem 0.8rem; /* compact but touch-friendly */
           min-width: 0;
         }
 
@@ -835,7 +835,7 @@
       testimonials.sort(() => Math.random() - 0.5);
 
       let currentIndex = -1;
-      const TESTIMONIAL_INTERVAL = 15000; // 15 seconds for a slower, less intrusive cadence
+      const TESTIMONIAL_INTERVAL = 3000; // 3 seconds — faster live-update cadence per request
       const FADE_DURATION = 600; // match CSS transition
 
       const el = document.getElementById('testimonial');
